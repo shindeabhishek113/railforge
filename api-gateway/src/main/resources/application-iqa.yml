@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: train-service
+            uri: http://${TRAIN_SERVICE_HOST:localhost}:8081
+            predicates:
+              - Path=/api/trains/**, /api/stations/**, /api/schedules/**
+
+          - id: booking-service
+            uri: http://${BOOKING_SERVICE_HOST:localhost}:8082
+            predicates:
+              - Path=/api/bookings/**, /api/auth/**
+
+          - id: notification-service
+            uri: http://${NOTIFICATION_SERVICE_HOST:localhost}:8083
+            predicates:
+              - Path=/api/notifications/**
+
+logging:
+  level:
+    com.railforge: INFO
+    org.springframework.cloud.gateway: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"

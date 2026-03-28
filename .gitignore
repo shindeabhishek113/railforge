@@ -9,3 +9,19 @@ target/
 *.iml
 *.log
 application-local.yml
+# IDE files
+.metadata/
+.settings/
+.classpath
+.project
+*.prefs
+
+# Maven
+target/
+*.class
+*.jar
+*.war
+
+# Logs
+*.log
+
