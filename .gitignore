@@ -1,0 +1,11 @@
+target/
+*.class
+*.jar
+*.war
+.idea/
+.settings/
+.classpath
+.project
+*.iml
+*.log
+application-local.yml

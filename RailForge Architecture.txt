@@ -1,0 +1,77 @@
+🚂 RailForge — Architecture Brief
+Project Overview
+An IRCTC-inspired train ticket booking system built with Modular Monolith architecture using Spring Boot, Java 21, Kafka, Redis and Spring AI.
+
+📁 Module Structure
+railforge/
+├── common/               ← shared JWT, exceptions, DTOs
+├── train-service/        ← port 8081
+├── booking-service/      ← port 8082
+├── notification-service/ ← port 8083
+└── api-gateway/          ← port 8080
+
+🗄️ Database
+
+Single PostgreSQL database — railforge_db
+Single schema — railforge_schema
+All services share same database
+Each service only touches its own tables
+
+
+🔐 Security Strategy
+
+JWT code written once in common module
+DEV — all service ports exposed + gateway running
+PROD — only gateway port exposed, services are private
+Gateway validates JWT in QA/PROD
+Each service validates JWT independently in DEV
+
+
+📨 Kafka Topics
+TopicProducerConsumerbooking.confirmedbooking-servicenotification-servicebooking.cancelledbooking-servicenotification-service + waitlist logicwaitlist.promotedbooking-servicenotification-service
+
+⚡ Redis Usage
+
+Distributed berth locking during booking
+Prevents double booking when concurrent requests hit same berth
+Lock TTL — 10 minutes (released after payment window)
+
+
+🤖 Spring AI
+
+Smart train route recommendations
+Berth preference suggestions based on journey duration
+Travel tips based on route
+
+
+🐳 Docker Setup
+DEV — docker-compose.yml
+
+All ports exposed
+Direct service access for debugging
+Gateway also running
+
+PROD — docker-compose.prod.yml
+
+Only gateway port 8080 exposed
+Services on private Docker network
+
+
+☁️ Deployment
+
+Phase 1 — Local Docker Compose
+Phase 2 — AWS EC2 with Docker
+Phase 3 — Mention ECS in interviews as production scale option
+
+
+🛠️ Tech Stack
+TechnologyPurposeJava 21Virtual Threads for high concurrencySpring Boot 3.2Core frameworkSpring Security + JWTAuthenticationSpring Cloud GatewayAPI GatewaySpring Cloud OpenFeignInter-service callsResilience4jCircuit BreakerApache KafkaAsync event streamingRedisDistributed berth lockingSpring AI + OpenAISmart recommendationsPostgreSQLPrimary databaseDocker + Docker ComposeContainerizationGitHub ActionsCI/CD pipelineAWS EC2Cloud deploymentSwaggerAPI documentationTestcontainersIntegration testing
+
+🗓️ Build Plan
+WeekFocusWeek 1Common module + Train Service + Booking Service setupWeek 2Waitlist logic + Kafka events + Notification ServiceWeek 3API Gateway + Spring AI + CI/CD + README + Swagger polish
+
+💬 Interview Pitch
+"I built RailForge — an IRCTC-inspired train ticket booking system using Modular Monolith architecture. Each domain has its own Spring Boot module sharing a single PostgreSQL database. The most complex feature is automatic waitlist promotion — when a passenger cancels, Kafka publishes a cancellation event, the booking service promotes the next waitlisted passenger to CONFIRMED and triggers an email notification automatically. Redis handles concurrent berth locking to prevent double booking. In production, only the API Gateway is publicly exposed — all internal services run on a private Docker network."
+
+Save this note. This is your project bible. No more changes to architecture! 💪
+Ready to start coding whenever you are! 🚀
