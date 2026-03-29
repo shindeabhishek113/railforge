@@ -51,51 +51,6 @@ services:
     networks:
       - railforge-network
 
-  api-gateway:
-    build: ./api-gateway
-    container_name: railforge_gateway
-    ports:
-      - "8080:8080"
-    networks:
-      - railforge-network
-    depends_on:
-      - train-service
-      - booking-service
-      - notification-service
-
-  train-service:
-    build: ./train-service
-    container_name: railforge_train
-    ports:
-      - "8081:8081"
-    networks:
-      - railforge-network
-    depends_on:
-      - postgres
-      - kafka
-
-  booking-service:
-    build: ./booking-service
-    container_name: railforge_booking
-    ports:
-      - "8082:8082"
-    networks:
-      - railforge-network
-    depends_on:
-      - postgres
-      - redis
-      - kafka
-
-  notification-service:
-    build: ./notification-service
-    container_name: railforge_notification
-    ports:
-      - "8083:8083"
-    networks:
-      - railforge-network
-    depends_on:
-      - kafka
-
 networks:
   railforge-network:
     driver: bridge
