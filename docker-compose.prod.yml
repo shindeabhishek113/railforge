@@ -1,0 +1,125 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: railforge_postgres
+    environment:
+      POSTGRES_DB: railforge_db
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    networks:
+      - railforge-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: railforge_redis
+    expose:
+      - "6379"
+    restart: unless-stopped
+    networks:
+      - railforge-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: railforge_zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    expose:
+      - "2181"
+    restart: unless-stopped
+    networks:
+      - railforge-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: railforge_kafka
+    depends_on:
+      - zookeeper
+    expose:
+      - "9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+    restart: unless-stopped
+    networks:
+      - railforge-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: railforge_gateway
+    ports:
+      - "8080:8080"          ← only public port!
+    networks:
+      - railforge-network
+    depends_on:
+      - train-service
+      - booking-service
+      - notification-service
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
+  train-service:
+    build: ./train-service
+    container_name: railforge_train
+    expose:
+      - "8081"               ← private!
+    networks:
+      - railforge-network
+    depends_on:
+      - postgres
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      KAFKA_HOST: kafka
+
+  booking-service:
+    build: ./booking-service
+    container_name: railforge_booking
+    expose:
+      - "8082"               ← private!
+    networks:
+      - railforge-network
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      KAFKA_HOST: kafka
+      REDIS_HOST: redis
+
+  notification-service:
+    build: ./notification-service
+    container_name: railforge_notification
+    expose:
+      - "8083"               ← private!
+    networks:
+      - railforge-network
+    depends_on:
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      KAFKA_HOST: kafka
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+
+networks:
+  railforge-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

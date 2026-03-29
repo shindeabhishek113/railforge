@@ -12,6 +12,10 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: railforge_schema
 
   kafka:
     bootstrap-servers: ${KAFKA_HOST}:9092
@@ -19,5 +23,3 @@ spring:
 logging:
   level:
     com.railforge: WARN
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
