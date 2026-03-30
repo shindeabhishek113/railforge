@@ -1,4 +1,4 @@
-package com.railforge.trainservice.model.entities;
+package com.railforge.trainservice.entity.model.entitie;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
