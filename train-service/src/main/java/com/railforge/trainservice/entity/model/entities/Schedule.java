@@ -1,9 +1,13 @@
-package com.railforge.trainservice.entity.model.entitie;
+package com.railforge.trainservice.entity.model.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import com.railforge.trainservice.model.enums.CoachType;
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.railforge.trainservice.model.enums.ScheduleStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,12 +28,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "coaches")
+@Table(name = "schedules")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Coach {
+public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,18 +44,35 @@ public class Coach {
     private Train train;
 
     @Column(nullable = false)
-    private String coachNumber;
+    private LocalDate journeyDate;
+
+    @Column(nullable = false)
+    private LocalDateTime departureTime;
+
+    @Column(nullable = false)
+    private LocalDateTime arrivalTime;
+
+    @Column(nullable = false)
+    private String fromStation;
+
+    @Column(nullable = false)
+    private String toStation;
+
+    @Column(nullable = false)
+    private BigDecimal baseFare;
+
+    @Column(nullable = false)
+    private Integer totalSeats;
+
+    @Column(nullable = false)
+    private Integer availableSeats;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private CoachType coachType;
+    private ScheduleStatus status;
 
-    @Column(nullable = false)
-    private Integer totalBerths;
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<ScheduleStop> stops;
 
-    @Column(nullable = false)
-    private BigDecimal fareMultiplier;
-
-    @OneToMany(mappedBy = "coach", cascade = CascadeType.ALL)
-    private List<Berth> berths;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

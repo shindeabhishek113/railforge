@@ -1,4 +1,4 @@
-package com.railforge.trainservice.entity.model.entitie;
+package com.railforge.trainservice.entity.model.entities;
 
 import java.time.LocalDateTime;
 

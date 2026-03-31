@@ -1,9 +1,11 @@
-package com.railforge.trainservice.entity.model.entitie;
+package com.railforge.trainservice.entity.model.entities;
 
-import java.time.LocalDateTime;
+import com.railforge.trainservice.model.enums.BerthType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,34 +19,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "schedule_stops")
+@Table(name = "berths")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ScheduleStop {
+public class Berth {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id", nullable = false)
-    private Schedule schedule;
+    @JoinColumn(name = "coach_id", nullable = false)
+    private Coach coach;
 
     @Column(nullable = false)
-    private String stationCode;
+    private String berthNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String stationName;
-
-    @Column(nullable = false)
-    private Integer stopNumber;
-
-    private LocalDateTime arrivalTime;
-
-    private LocalDateTime departureTime;
-
-    @Column(nullable = false)
-    private Integer distanceFromOrigin;
+    private BerthType berthType;
 }

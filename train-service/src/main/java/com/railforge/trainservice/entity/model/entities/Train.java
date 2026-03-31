@@ -1,4 +1,4 @@
-package com.railforge.trainservice.entity.model.entitie;
+package com.railforge.trainservice.entity.model.entities;
 
 import java.time.Instant;
 import java.util.List;
@@ -17,6 +17,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -66,7 +67,7 @@ public class Train {
     @Column(name = "running_day")
     private List<DayOfWeek> runningDays;
 
-    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Coach> coaches;
 
     @CreationTimestamp
