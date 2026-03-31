@@ -1,6 +1,6 @@
 package com.railforge.trainservice.entity.model.entitie;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -62,17 +62,16 @@ public class Train {
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "train_running_days",
-            joinColumns = @JoinColumn(name = "train_id"))
-    @Column(name = "day")
+    @CollectionTable(name = "train_running_days", joinColumns = @JoinColumn(name = "train_id"))
+    @Column(name = "running_day")
     private List<DayOfWeek> runningDays;
 
     @OneToMany(mappedBy = "train", cascade = CascadeType.ALL)
     private List<Coach> coaches;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private Instant createdOn;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private Instant updatedOn;
 }
