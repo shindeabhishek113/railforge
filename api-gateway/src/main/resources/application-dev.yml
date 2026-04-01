@@ -1,23 +1,26 @@
 server:
-  port: 8080
+  port: 8081  # api-gateway
 
 spring:
+  application:
+    name: api-gateway
+
   cloud:
     gateway:
       mvc:
         routes:
           - id: train-service
-            uri: http://localhost:8081
+            uri: http://localhost:8082
             predicates:
               - Path=/api/trains/**, /api/stations/**, /api/schedules/**
 
           - id: booking-service
-            uri: http://localhost:8082
+            uri: http://localhost:8083
             predicates:
               - Path=/api/bookings/**, /api/auth/**
 
           - id: notification-service
-            uri: http://localhost:8083
+            uri: http://localhost:8084
             predicates:
               - Path=/api/notifications/**
 

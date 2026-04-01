@@ -1,0 +1,9 @@
+custom function
+location group 
+employee search 
+consent list
+
+if(!consentNoteResponse.isCurrent()) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This consent is disabled. Please contact your administrator to enable it before proceeding");
+				}
+

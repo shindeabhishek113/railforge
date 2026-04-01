@@ -23,3 +23,5 @@ spring:
 logging:
   level:
     com.railforge: WARN
+
+internal:secret: ${INTERNAL_SECRET:}

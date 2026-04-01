@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   datasource:
@@ -21,3 +21,7 @@ logging:
     com.railforge: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+
+# Internal security
+internal:
+  secret: railforge-internal-2024
