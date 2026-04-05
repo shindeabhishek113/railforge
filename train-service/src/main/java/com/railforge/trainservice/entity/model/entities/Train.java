@@ -23,6 +23,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,12 +38,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Train {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    private String trainNumber;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "train_sequence_id")
+	@SequenceGenerator(name = "train_sequence_id", sequenceName = "train_sequence_id", allocationSize = 1)
+	private Long id;
 
     @Column(nullable = false)
     private String trainName;

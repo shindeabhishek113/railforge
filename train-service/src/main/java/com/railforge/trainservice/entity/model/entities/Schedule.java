@@ -21,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +36,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Schedule {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_sequence_id")
+	@SequenceGenerator(name = "schedule_sequence_id", sequenceName = "schedule_sequence_id", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
