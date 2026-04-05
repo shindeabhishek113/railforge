@@ -2,7 +2,7 @@ package com.railforge.trainservice.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,7 @@ import com.railforge.trainservice.dto.request.TrainRequestDTO;
 import com.railforge.trainservice.dto.response.TrainSummaryDTO;
 import com.railforge.trainservice.entity.model.entities.Coach;
 import com.railforge.trainservice.entity.model.entities.Train;
+import com.railforge.trainservice.exception.handler.AppException;
 import com.railforge.trainservice.repository.TrainJpaRepository;
 import com.railforge.trainservice.service.TrainService;
 
@@ -24,11 +25,10 @@ public class TrainServiceImpl implements TrainService {
 	@Override
 	public Long addTrain(TrainRequestDTO trainRequestDTO) {
 		Train train = new Train();
-		train.setOriginStation(trainRequestDTO.getOriginStation());
-		train.setTrainNumber(UUID.randomUUID().toString());
 		train.setTrainName(trainRequestDTO.getTrainName());
 		train.setTrainType(trainRequestDTO.getTrainType());
 		train.setStatus(trainRequestDTO.getStatus());
+		train.setOriginStation(trainRequestDTO.getOriginStation());
 		train.setDestinationStation(trainRequestDTO.getDestinationStation());
 		train.setRunningDays(trainRequestDTO.getRunningDays());
 		
@@ -44,9 +44,7 @@ public class TrainServiceImpl implements TrainService {
 		}
 		
 		train.setCoaches(coachs);
-		
-		train.setRunningDays(trainRequestDTO.getRunningDays());
-		
+				
 		trainJpaRepository.save(train);
 		return train.getId();
 	}
@@ -58,11 +56,25 @@ public class TrainServiceImpl implements TrainService {
 		for(Train train : trainList) {
 			TrainSummaryDTO trainSummaryDTO = new TrainSummaryDTO();
 			trainSummaryDTO.setTrainName(train.getTrainName());
-			trainSummaryDTO.setTrainNumber(train.getTrainNumber());
 			trainSummaryDTO.setOriginStation(train.getOriginStation());
 			trainSummaryDTO.setDestinationStation(train.getDestinationStation());
 			trainSummaryDTOList.add(trainSummaryDTO);
 		}
 		return trainSummaryDTOList;
+	}
+
+	@Override
+	public TrainSummaryDTO getTrainObject(long id) throws Exception {
+		Optional<Train> trainOptional = trainJpaRepository.findById(id);
+		if(trainOptional.isEmpty()) {
+			throw AppException.notFound("Invalid trainId: " + id);
+		}
+		Train train = trainOptional.get();
+		TrainSummaryDTO trainSummaryDTO = new TrainSummaryDTO();
+		trainSummaryDTO.setId(train.getId());
+		trainSummaryDTO.setTrainName(train.getTrainName());
+		trainSummaryDTO.setOriginStation(train.getOriginStation());
+		trainSummaryDTO.setDestinationStation(train.getDestinationStation());
+		return trainSummaryDTO;
 	}
 }

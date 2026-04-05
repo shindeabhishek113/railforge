@@ -8,4 +8,5 @@ import com.railforge.trainservice.dto.response.TrainSummaryDTO;
 public interface TrainService {
 	Long addTrain(TrainRequestDTO trainRequestDTO);
 	List<TrainSummaryDTO> getTrainList();
+	TrainSummaryDTO getTrainObject(long id) throws Exception;
 }

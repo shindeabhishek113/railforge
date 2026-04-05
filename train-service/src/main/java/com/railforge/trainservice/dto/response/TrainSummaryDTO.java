@@ -3,7 +3,6 @@ package com.railforge.trainservice.dto.response;
 public class TrainSummaryDTO {
 
 	private Long id;
-    private String trainNumber;
     private String trainName;
     private String originStation;
     private String destinationStation;
@@ -12,12 +11,6 @@ public class TrainSummaryDTO {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public String getTrainNumber() {
-		return trainNumber;
-	}
-	public void setTrainNumber(String trainNumber) {
-		this.trainNumber = trainNumber;
 	}
 	public String getTrainName() {
 		return trainName;

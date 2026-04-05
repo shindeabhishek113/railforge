@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +29,10 @@ public class TrainController {
 	@GetMapping(value = "/list", produces = "application/json")
 	public Map<String, Object> getTrainList() {
 		return Collections.singletonMap("trainList", trainService.getTrainList());
+	}
+	
+	@GetMapping(value = "/object/{id}", produces = "application/json")
+	public Map<String, Object> getTrainObject(@PathVariable("id") long id ) throws Exception {
+		return Collections.singletonMap("trainObject", trainService.getTrainObject(id));
 	}
 }
