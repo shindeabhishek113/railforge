@@ -5,13 +5,24 @@ import java.util.List;
 
 import com.railforge.trainservice.model.enums.CoachType;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Request body for creating a new coach")
 public class CoachRequestDTO {
 
-	private String coachNumber;
+	@Schema(description = "Coach number", example = "S1")
+    private String coachNumber;
+
+    @Schema(description = "Type of coach", example = "SLEEPER")
     private CoachType coachType;
+
+    @Schema(description = "Total number of berths in the coach", example = "72")
     private Integer totalBerths;
+
+    @Schema(description = "Fare multiplier for this coach type", example = "1.5")
     private BigDecimal fareMultiplier;
 
+    @Schema(description = "List of berths in the coach")
     private List<BerthRequestDTO> berths;
 
 	public String getCoachNumber() {

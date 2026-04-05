@@ -6,27 +6,31 @@ import com.railforge.trainservice.model.enums.DayOfWeek;
 import com.railforge.trainservice.model.enums.TrainStatus;
 import com.railforge.trainservice.model.enums.TrainType;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Request body for creating a new train")
 public class TrainRequestDTO {
 
-	private String trainNumber;
+	@Schema(description = "Train name", example = "Rajdhani Express")
     private String trainName;
+
+    @Schema(description = "Type of train", example = "EXPRESS")
     private TrainType trainType;
+
+    @Schema(description = "Current status of the train", example = "ACTIVE")
     private TrainStatus status;
 
+    @Schema(description = "Origin station", example = "Mumbai Central")
     private String originStation;
+
+    @Schema(description = "Destination station", example = "New Delhi")
     private String destinationStation;
 
+    @Schema(description = "Days on which train runs", example = "[MONDAY, WEDNESDAY]")
     private List<DayOfWeek> runningDays;
 
+    @Schema(description = "List of coaches in the train")
     private List<CoachRequestDTO> coaches;
-
-	public String getTrainNumber() {
-		return trainNumber;
-	}
-
-	public void setTrainNumber(String trainNumber) {
-		this.trainNumber = trainNumber;
-	}
 
 	public String getTrainName() {
 		return trainName;
