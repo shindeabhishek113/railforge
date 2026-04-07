@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.railforge.common.config.JwtUtil;
 import com.railforge.common.enums.Role;
+import com.railforge.common.jpa.repository.UserRepository;
 import com.railforge.common.model.entities.User;
-import com.railforge.common.repository.UserRepository;
+import com.railforge.common.request.dto.LoginRequestDTO;
 import com.railforge.common.request.dto.RegisterRequestDTO;
 import com.railforge.common.response.dto.AuthResponseDTO;
 import com.railforge.common.service.AuthService;
@@ -67,5 +68,17 @@ public class AuthServiceImpl implements AuthService {
                 .email(user.getEmail())
                 .role(user.getRole().name())
                 .build();
+    }
+
+	@Override
+    public AuthResponseDTO login(LoginRequestDTO loginRequestDTO) throws Exception {
+
+		User user = userRepository.findByEmail(loginRequestDTO.getEmail());
+		
+		if(!passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())) {
+			throw new Exception("Invalid credentials");
+		}
+
+        return buildAuthResponse(user);
     }
 }

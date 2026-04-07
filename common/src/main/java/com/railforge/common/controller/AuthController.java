@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.railforge.common.request.dto.LoginRequestDTO;
 import com.railforge.common.request.dto.RegisterRequestDTO;
 import com.railforge.common.service.AuthService;
 
@@ -28,5 +29,10 @@ public class AuthController {
 		return Collections.singletonMap("authResponse", authService.register(request));
     }
 
+	@PostMapping("/login")
+    public Map<String, Object> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) throws Exception {
+		authService.login(loginRequestDTO);
+		return Collections.singletonMap("success", true);
+    }
 }
 
